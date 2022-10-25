@@ -33,12 +33,18 @@ class PartnersController extends Controller
         }
         //--------------------------------------------------------
         //---------------------Convierte la fecha al formato de consulta --------------------------------
-        date_default_timezone_set('America/Los_Angeles');
+        date_default_timezone_set('America/La_Paz');
         $originalDate = str_replace("/","-",$request->date);
         $formatDate = strtotime($originalDate);
         $initDate = date("Y-m-d 01:00:00",$formatDate);
+        $initActiviti = date("Y-m-d 01:00:00",$formatDate);
         $endDate = date("Y-m-d 23:59:00",$formatDate);
         $today = strtotime(date("Y-m-d 01:00:00",time()));
+        if (strtotime($initDate) == $today){
+            $initActiviti = date("Y-m-d H:i:s",time());
+            $newDate = strtotime ( '+2 hour' , strtotime ($initActiviti) ) ; 
+            $initActiviti = date('Y-m-d H:i:s', $newDate); 
+        }
         if (strtotime($initDate) < $today){
             return [
                 "message"=> "La fecha de visita debe de ser mayor fecha actual",
@@ -53,7 +59,7 @@ class PartnersController extends Controller
                                           @par_codigo_familia = ".$request->codigoFamilia.",
                                           @par_codigo_miembro = ".$request->codigoMiembroFamilia.",
                                           @par_fecha_efectiva = N'".$initDate."',
-                                          @par_hora_inicio = N'".$initDate."',
+                                          @par_hora_inicio = N'".$initActiviti."',
                                           @par_hora_termino = N'".$endDate."',
                                           @par_tipo_invitacion = N'INSTALACIONES',
                                           @par_primer_nombre = N'".$request->guestName."',
@@ -269,12 +275,12 @@ class PartnersController extends Controller
             ];
         }
         if($request->consulta == 'old'){
-            date_default_timezone_set('America/Los_Angeles');
+            date_default_timezone_set('America/La_Paz');
             $newdata = [];
             $contador = 0;
            foreach($data as $array){
             $initDate = strtotime($array->FECHA_EFECTIVA);
-            $today = strtotime(date("d-m-Y H:i:00",time()));
+            $today = strtotime('-24 hour' ,strtotime(date("Y-m-d 00:00:00",time())));
             if($initDate < $today){
                $newdata[$contador] =  $array;
                $contador ++;
@@ -287,14 +293,16 @@ class PartnersController extends Controller
                 "success"=> true
             ];
         }
+
         if($request->consulta == 'new'){
-            date_default_timezone_set('America/Los_Angeles');
+            date_default_timezone_set('America/La_Paz');
             $newdata = [];
             $contador = 0;
            foreach($data as $array){
+
             $initDate = strtotime($array->FECHA_EFECTIVA);
-            $today = strtotime(date("d-m-Y H:i:00",time()));
-            if($initDate > $today){
+            $today = strtotime('-24 hour' ,strtotime(date("Y-m-d 00:00:00",time())));
+            if($initDate >= $today){
                $newdata[$contador] =  $array;
                $contador ++;
             }

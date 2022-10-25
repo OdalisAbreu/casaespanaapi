@@ -287,7 +287,6 @@ class PartnersController extends Controller
             }
             
            }
-
             return [ 
                 "data"=>  $newdata,
                 "success"=> true
@@ -306,9 +305,7 @@ class PartnersController extends Controller
                $newdata[$contador] =  $array;
                $contador ++;
             }
-            
            }
-
             return [ 
                 "data"=>  $newdata,
                 "success"=> true

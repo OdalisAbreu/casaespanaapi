@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PartnersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/test', [PartnersController::class, 'index']);
+
+Route::get('/prueba', function () {
+    return view('prueba');
 });

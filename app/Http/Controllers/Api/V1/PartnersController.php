@@ -17,8 +17,9 @@ class PartnersController extends Controller
 {
     public function index()
     {
-       //  $data = DB::select("DECLARE @par_existe Varchar(10) Exec Existe_Preinvitacion 28918,23799,'2022-08-17 15:00:00','ACTIVIDAD','22400274092','',0,0,1,@par_existe OUTPUT SELECT @par_existe AS 'result';");
-      //  return $data[0];
+        echo 'entro';
+        // $data = DB::select("DECLARE @par_existe Varchar(10) Exec Existe_Preinvitacion 28918,23799,'2022-08-17 15:00:00','ACTIVIDAD','22400274092','',0,0,1,@par_existe OUTPUT SELECT @par_existe AS 'result';");
+       // return $data[0];
     }
 
     public function store(Request $request)
@@ -37,8 +38,8 @@ class PartnersController extends Controller
         $formatDate = strtotime($originalDate);
         $initDate = date("Y-m-d 01:00:00",$formatDate);
         $endDate = date("Y-m-d 23:59:00",$formatDate);
-        $today = strtotime(date("d-m-Y H:i:00",time()));
-        if ($today > $formatDate ){
+        $today = strtotime(date("Y-m-d 01:00:00",time()));
+        if (strtotime($initDate) < $today){
             return [
                 "message"=> "La fecha de visita debe de ser mayor fecha actual",
                 "success"=> false
@@ -139,6 +140,11 @@ class PartnersController extends Controller
         $baseToken = base64_encode($userToken); //Base64 para el Body
         $stringToken = $request->id.':'.$request->token;
         $authToken = base64_encode($stringToken); // Base64 de Authorization
+
+      /*  return $request->id.' - '.$request->token;
+
+        $response = Http::withBasicAuth($request->id,$request->token)->accept('text/plain')->post('https://ov.casadeespana.com.do:9191/OV_Administracion_Socios/webAPI/webUserAdmSocios/autenticarUsuario',[$baseToken ] );
+        return $response;*/
 
         $curl = curl_init();
 
